@@ -1,4 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
-$font-family-base: 'Poppins';
+$font-family-base: "Poppins";
 $headings-font-weight: 700;
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
