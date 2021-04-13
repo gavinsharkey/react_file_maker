@@ -1,2 +1,19 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
+
+.nav-link {
+  transition: none;
+}
+
+.nav-item a.nav-link {
+  color: $gray-700;
+  background: var(--bs-light);
+}
+
+.nav-item:first-child a.nav-link {
+  border-left: 0;
+}
+
+.nav-item:last-child a.nav-link {
+  border-right: 0;
+}
