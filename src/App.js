@@ -1,4 +1,5 @@
 import { useState } from "react";
+import DownloadTab from "./DownloadTab";
 import FileMaker from "./concerns/FileMaker";
 import { FILE_TYPES, BYTE_SIZES, MAX_BYTE_SIZE } from "./constants";
 
@@ -7,33 +8,43 @@ function App() {
   const [fileType, setFileType] = useState("txt");
   const [byteSize, setByteSize] = useState("b");
   const [bytes, setBytes] = useState(1);
+  const [selectedTab, setSelectedTab] = useState("download");
 
-  function downloadFile() {
+  const downloadFile = () => {
     const fullFileName = `${fileName}.${fileType}`;
 
     const fileMaker = new FileMaker(fileType, fullFileName, bytes);
 
     fileMaker.download();
+  };
+
+  const renderCurrentTab = () => {
+    switch (selectedTab) {
+      case 'download':
+        return <DownloadTab downloadFile={downloadFile} />
+      default:
+        return <h5 className="text-center">No Tab Found.</h5>
+    }
   }
 
-  function handleByteChange(e) {
+  const handleByteChange = (e) => {
     const selectedByteSize = BYTE_SIZES[byteSize];
     setBytes(e.target.value * selectedByteSize.toBytesMultiplier);
-  }
+  };
 
-  function renderCurrentBytes() {
+  const renderCurrentBytes = () => {
     const selectedByteSize = BYTE_SIZES[byteSize];
 
     return bytes / selectedByteSize.toBytesMultiplier;
-  }
+  };
 
-  function areValidBytes() {
+  const areValidBytes = () => {
     return bytes <= MAX_BYTE_SIZE && bytes > 0;
-  }
+  };
 
   return (
     <>
-      <div className="container my-5">
+      <div style={{zIndex: 2}} className="container my-5">
         <div className="row g-3">
           <div className="col-12">
             <div className="card shadow overflow-hidden">
@@ -44,9 +55,7 @@ function App() {
                   purposes!
                 </p>
                 <p className="card-text text-muted text-center mt-0">
-                  <small>
-                    Max File Size: 104,857,600 B/102,400 KB/100 MB
-                  </small>
+                  <small>Max File Size: 104,857,600 B/102,400 KB/100 MB</small>
                 </p>
               </div>
               <div className="card-body bg-light">
@@ -81,14 +90,14 @@ function App() {
                       <input
                         value={renderCurrentBytes()}
                         onChange={handleByteChange}
-                        className={`form-control ${areValidBytes() ? '' : 'is-invalid'}`}
+                        className={`form-control ${
+                          areValidBytes() ? "" : "is-invalid"
+                        }`}
                         type="number"
                         placeholder="Enter Size"
                       ></input>
                       {areValidBytes() ? null : (
-                        <div className="invalid-feedback">
-                          Invalid Size
-                        </div>
+                        <div className="invalid-feedback">Invalid Size</div>
                       )}
                     </div>
                     <div className="col-4 col-md-3">
@@ -105,58 +114,58 @@ function App() {
                         ))}
                       </select>
                     </div>
-                    {/* <div className="col-12 col-md-6">
-                    <div className="d-grid">
-                      <button className="btn btn-success">Preview</button>
-                    </div>
-                  </div> */}
-                    <div className="col-12 col-md-3 align-self-end">
-                      <div className="d-grid">
-                        <button
-                          onClick={downloadFile}
-                          className="btn btn-primary"
-                        >
-                          Download
-                        </button>
-                      </div>
-                    </div>
                   </div>
                 </div>
+                <span className="mt-3 d-block text-muted text-center"><small>To get your file, you can:</small></span>
               </div>
-            </div>
-          </div>
-          {/* Might do something with this later */}
-          {/* <div className="h-auto col-12 col-lg-4">
-          <div className="card shadow">
-            <div className="card-body">
-              <h5 className="card-title text-center">Preview Text</h5>
               <div
-                className="overflow-hidden position-relative px-3 py-2 border rounded-2 shadow-sm bg-light"
+                style={{ paddingTop: "calc(42px + 1rem)" }}
+                className="card-body position-relative"
               >
-                <div
-                  style={{
-                    height: 32,
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                  }}
-                  className="text-center position-absolute top-0 start-0 end-0 bg-white py-1 px-2"
-                >
-                  <small>
-                    <em>File.pdf</em>
-                  </small>
-                </div>
-                <div style={{ marginTop: 32 }} className="content">
-                  <small>No Content</small>
+                <ul className="nav nav-tabs nav-fill position-absolute top-0 start-0 end-0 border-bottom">
+                  <li className="nav-item">
+                    <a
+                      onClick={() => setSelectedTab("download")}
+                      className={`nav-link rounded-0 ${
+                        selectedTab === "download" ? "active" : ""
+                      }`}
+                      href="#"
+                    >
+                      Download It
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      onClick={() => setSelectedTab("stream")}
+                      className={`nav-link rounded-0 ${
+                        selectedTab === "stream" ? "active" : ""
+                      }`}
+                      href="#"
+                    >
+                      Stream It
+                    </a>
+                  </li>
+                </ul>
+                <div className="">
+                  {renderCurrentTab()}
                 </div>
               </div>
             </div>
           </div>
-        </div> */}
         </div>
       </div>
-      <div className="fixed-bottom text-center text-muted pb-4">
-        <small>&#169; Gavin Sharkey 2021 <a className="text-reset" target="_blank" rel="noreferrer noopener" href="https://www.linkedin.com/in/gavinsharkey/">LinkedIn</a></small>
+      <div style={{zIndex: -1}} className="fixed-bottom text-center text-muted pb-4 ">
+        <small>
+          &#169; Gavin Sharkey 2021{" "}
+          <a
+            className="text-reset"
+            target="_blank"
+            rel="noreferrer noopener"
+            href="https://www.linkedin.com/in/gavinsharkey/"
+          >
+            LinkedIn
+          </a>
+        </small>
       </div>
     </>
   );
