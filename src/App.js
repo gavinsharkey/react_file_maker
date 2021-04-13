@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import FileMaker from "./concerns/FileMaker";
-import { FILE_TYPES, BYTE_SIZES } from "./constants";
+import { FILE_TYPES, BYTE_SIZES, MAX_BYTE_SIZE } from "./constants";
 
 function App() {
-  const [fileName, setFileName] = useState("test1");
+  const [fileName, setFileName] = useState("");
   const [fileType, setFileType] = useState("txt");
   const [byteSize, setByteSize] = useState("b");
   const [bytes, setBytes] = useState(1);
@@ -27,6 +27,10 @@ function App() {
     return bytes / selectedByteSize.toBytesMultiplier;
   }
 
+  function areValidBytes() {
+    return bytes <= MAX_BYTE_SIZE && bytes > 0;
+  }
+
   return (
     <>
       <div className="container my-5">
@@ -41,7 +45,7 @@ function App() {
                 </p>
                 <p className="card-text text-muted text-center mt-0">
                   <small>
-                    (Max File Size: 104,857,600 B/102,400 KB/100 MB)
+                    Max File Size: 104,857,600 B/102,400 KB/100 MB
                   </small>
                 </p>
               </div>
@@ -77,10 +81,15 @@ function App() {
                       <input
                         value={renderCurrentBytes()}
                         onChange={handleByteChange}
-                        className="form-control"
+                        className={`form-control ${areValidBytes() ? '' : 'is-invalid'}`}
                         type="number"
                         placeholder="Enter Size"
                       ></input>
+                      {areValidBytes() ? null : (
+                        <div className="invalid-feedback">
+                          Invalid Size
+                        </div>
+                      )}
                     </div>
                     <div className="col-4 col-md-3">
                       <label className="form-label">Bytes</label>
@@ -147,7 +156,7 @@ function App() {
         </div>
       </div>
       <div className="fixed-bottom text-center text-muted pb-4">
-        <small>&#169; Gavin Sharkey 2021 <a className="text-reset" target="_blank" href="https://www.linkedin.com/in/gavinsharkey/">LinkedIn</a></small>
+        <small>&#169; Gavin Sharkey 2021 <a className="text-reset" target="_blank" rel="noreferrer noopener" href="https://www.linkedin.com/in/gavinsharkey/">LinkedIn</a></small>
       </div>
     </>
   );

@@ -1,8 +1,10 @@
 export const BYTE_SIZES = {
-  b: { max: 104857600, toBytesMultiplier: 1 },
-  kb: { max: 102400, toBytesMultiplier: 1024 },
-  mb: { max: 100, toBytesMultiplier: 1048576 },
+  b: { toBytesMultiplier: 1 },
+  kb: { toBytesMultiplier: 1024 },
+  mb: { toBytesMultiplier: 1048576 },
 };
+
+export const MAX_BYTE_SIZE = 104857600;
 
 export const FILE_TYPES = {
   txt: {
