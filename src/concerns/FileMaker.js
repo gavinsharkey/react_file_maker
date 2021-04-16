@@ -11,21 +11,43 @@ class FileMaker {
     this.sizeInBytes = sizeInBytes;
   }
 
-  download() {
-    const { type, fileName, sizeInBytes } = this;
+  getFileAsBase64URL() {
+    const { type, sizeInBytes } = this;
     const typeInfo = FILE_TYPES[type];
     const data = btoa("a".repeat(sizeInBytes));
-    const downloadUrl = `data:${typeInfo.mimeType};base64,${data}`;
+    return `data:${typeInfo.mimeType};base64,${data}`;
+  }
+
+  async getFileAsBlob() {
+    const resp = await fetch(this.getFileAsBase64URL())
+    return await resp.blob();
+  }
+
+  download() {
+    const { fileName } = this;
 
     const link = document.createElement("a");
-    link.addEventListener('click', e => {
-      console.log('clicked')
-    })
-    link.href = downloadUrl;
+    link.href = this.getFileAsBase64URL();
     link.download = fileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  async stream(url, options = {
+    method: "POST"
+  }) {
+    const form = new FormData()
+    form.append('file', await this.getFileAsBlob(), this.fileName)
+
+    options = {
+      ...options,
+      body: form
+    }
+
+    const resp = await fetch(url, options);
+    const {status, statusText} = resp;
+    return { status, statusText }
   }
 }
 
