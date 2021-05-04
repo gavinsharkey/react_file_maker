@@ -1,4 +1,4 @@
-import { FILE_TYPES } from '../constants';
+import { FILE_TYPES } from "../constants";
 
 class FileMaker {
   constructor(type, fileName, sizeInBytes) {
@@ -19,7 +19,7 @@ class FileMaker {
   }
 
   async getFileAsBlob() {
-    const resp = await fetch(this.getFileAsBase64URL())
+    const resp = await fetch(this.getFileAsBase64URL());
     return await resp.blob();
   }
 
@@ -34,20 +34,30 @@ class FileMaker {
     document.body.removeChild(link);
   }
 
-  async stream(url, options = {
-    method: "POST"
-  }) {
-    const form = new FormData()
-    form.append('file', await this.getFileAsBlob(), this.fileName)
+  async stream(
+    url,
+    options = {
+      method: "POST",
+    }
+  ) {
+    const form = new FormData();
+    form.append("file", await this.getFileAsBlob(), this.fileName);
 
     options = {
       ...options,
-      body: form
-    }
+      headers: {
+        ...options.headers,
+        "Accepts": "application/json"
+      },
+      body: form,
+    };
 
     const resp = await fetch(url, options);
-    const {status, statusText} = resp;
-    return { status, statusText }
+    const { status } = resp;
+
+    const body = await resp.json();
+
+    return { status, body };
   }
 }
 

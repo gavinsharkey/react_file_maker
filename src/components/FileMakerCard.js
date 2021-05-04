@@ -4,7 +4,7 @@ import StreamTab from "./StreamTab";
 import FileMaker from "../concerns/FileMaker";
 import { FILE_TYPES, BYTE_SIZES, MAX_BYTE_SIZE } from "../constants";
 
-function FileMakerCard() {
+function FileMakerCard({ dispatchToast }) {
   const [fileName, setFileName] = useState("");
   const [fileType, setFileType] = useState("txt");
   const [byteSize, setByteSize] = useState("b");
@@ -20,7 +20,7 @@ function FileMakerCard() {
       case "download":
         return <DownloadTab file={getFile()} />;
       case "stream":
-        return <StreamTab file={getFile()} />;
+        return <StreamTab file={getFile()} dispatchToast={dispatchToast} />;
       default:
         return <h5 className="text-center">Coming soon!</h5>;
     }
@@ -43,9 +43,6 @@ function FileMakerCard() {
 
   return (
     <div className="card shadow overflow-hidden">
-      {/* <div className="card-header bg-white">
-        <p className="m-0">File Maker</p>
-      </div> */}
       <div className="card-body bg-light">
         <div className="container-fluid">
           <div className="row g-3 justify-content-end">

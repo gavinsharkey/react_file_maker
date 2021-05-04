@@ -49,17 +49,16 @@ const reducer = (state, action) => {
   }
 };
 
-function StreamTab({ file }) {
+function StreamTab({ file, dispatchToast }) {
   const [collapsed, setCollapsed] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [recentError, setRecentError] = useState(false);
 
   useEffect(() => {
     if (recentError) {
-      setRecentError(false)
+      setRecentError(false);
     }
-  }, [state])
+  }, [state]);
 
   const setURL = (payload) => {
     dispatch({ type: "url.set", payload });
@@ -107,7 +106,22 @@ function StreamTab({ file }) {
       return;
     }
 
-    file.stream(url, options).then((resp) => console.log(resp));
+    file
+      .stream(url, options)
+      .then((resp) =>
+        dispatchToast({
+          id: Math.random(),
+          message: JSON.stringify(resp.body, null, "\t"),
+          type: "success",
+        })
+      )
+      .catch((err) =>
+        dispatchToast({
+          id: Math.random(),
+          message: String(err),
+          type: "danger",
+        })
+      );
   };
 
   const renderHeaders = () => {
