@@ -39,12 +39,17 @@ function DetailsCard() {
         <h5>Notes &#x270D;</h5>
         <ol>
           <li>
+            The default method for the fetch request is <code>POST</code>, and the request
+            body is in <code>multipart/form-data</code>. It expects JSON as a response.
+          </li>
+          <li>
             You may have to tweak the CORS configuration of your API to get the
             stream option to work.
           </li>
           <li>
             You can set the headers to your liking, but if you set the{" "}
-            <code>Content-Type</code> header, it will break. This is due to how the <code>FormData</code> interface works.
+            <code>Content-Type</code> header, it will break. This is due to how
+            the <code>FormData</code> API works.
           </li>
         </ol>
       </div>
